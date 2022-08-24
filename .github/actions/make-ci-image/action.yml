@@ -17,7 +17,7 @@ runs:
       key: ${{ github.ref_name }}-${{ hashfiles('make_ci_image.sh', 'pybuild.sh', '.github/actions/make-ci-image/action.yml') }}
   - name: build image
     if: (steps.imagefiles.outputs.cache-hit != 'true') || (github.event_name == 'schedule')
-    run: make_ci_image.sh
+    run: ./make_ci_image.sh
     shell: bash
     env:
       image_name: ${{ inputs.image_name }}
