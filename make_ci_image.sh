@@ -17,7 +17,6 @@ buildcmd() {
 buildah config --workingdir /root "${c}"
 
 buildcmd apt update --quiet=2
-buildcmd apt install --yes --quiet=2 git
 
 buildcmd apt install --yes --quiet=2 "${py_deps[@]}"
 
