@@ -10,6 +10,9 @@ on:
 jobs:
   clean-hatch:
     runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        distro: [buster, bullseye]
     steps:
     - name: delete image tag
-      run: 'curl -s -X DELETE -H "Authorization: Bearer ${{ secrets.QUAY_API_TOKEN }}" https://quay.io/api/v1/repository/km6g-ci-images/python/tag/pr${{ github.event.pull_request.number }}'
+      run: 'curl -s -X DELETE -H "Authorization: Bearer ${{ secrets.QUAY_API_TOKEN }}" https://quay.io/api/v1/repository/km6g-ci-images/python/tag/${{ matrix.distro }}-pr${{ github.event.pull_request.number }}'

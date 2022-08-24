@@ -27,7 +27,7 @@ on:
     - cron: "23 2 * * 6"
 
 env:
-  registry_base: 'quay.io/km6g-ci-images'
+  image_base: 'quay.io/km6g-ci-images/python'
 
 jobs:
   preflight:
@@ -35,8 +35,8 @@ jobs:
     outputs:
       need_image: ${{ steps.preflight.outputs.need_image }}
       image_tag: ${{ steps.preflight.outputs.image_tag }}
-      # workaround to make registry_base available in jobs
-      registry_base: ${{ env.registry_base }}
+      # workaround to make image_base available in jobs
+      image_base: ${{ env.image_base }}
     steps:
     - uses: actions/checkout@v3
     - id: preflight
@@ -45,11 +45,15 @@ jobs:
     runs-on: ubuntu-20.04
     needs:
     - preflight
+    strategy:
+      matrix:
+        distro: [buster, bullseye]
     steps:
     - uses: actions/checkout@v3
     - uses: ./.github/actions/make-ci-image
       if: needs.preflight.outputs.need_image == 'true'
       with:
-        image_name: ${{ needs.preflight.outputs.registry_base }}/python:${{ needs.preflight.outputs.image_tag }}
+        distro: ${{ matrix.distro }}
+        image_name: ${{ needs.preflight.outputs.image_base }}:${{ matrix.distro }}-${{ needs.preflight.outputs.image_tag }}
         quay_username: ${{ secrets.QUAY_BOT_NAME }}
         quay_password: ${{ secrets.QUAY_BOT_PASSWORD }}

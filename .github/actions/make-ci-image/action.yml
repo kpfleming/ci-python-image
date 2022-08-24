@@ -1,5 +1,7 @@
 name: "Build image"
 inputs:
+  distro:
+    required: true
   image_name:
     required: true
   quay_username:
@@ -14,10 +16,10 @@ runs:
     uses: actions/cache@v3
     with:
       path: make_ci_image.sh
-      key: ${{ github.ref_name }}-${{ hashfiles('make_ci_image.sh', 'pybuild.sh', '.github/actions/make-ci-image/action.yml') }}
+      key: ${{ github.ref_name }}-${{ inputs.distro }}-${{ hashfiles('make_ci_image.sh', 'pybuild.sh', '.github/actions/make-ci-image/action.yml') }}
   - name: build image
     if: (steps.imagefiles.outputs.cache-hit != 'true') || (github.event_name == 'schedule')
-    run: ./make_ci_image.sh
+    run: ./make_ci_image.sh ${{ inputs.distro }}
     shell: bash
     env:
       image_name: ${{ inputs.image_name }}
