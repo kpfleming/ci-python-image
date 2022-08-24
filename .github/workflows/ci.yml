@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches:
+    - main
+    paths:
+    - 'pybuild.sh'
+    - 'make_ci_image.sh'
+    - '.github/workflows/ci.yml'
+    - '.github/actions/preflight/action.yml'
+    - '.github/actions/make-ci-image/action.yml'
+  pull_request:
+    types:
+    - opened
+    - reopened
+    - synchronize
+    branches:
+    - main
+    paths:
+    - 'pybuild.sh'
+    - 'make_ci_image.sh'
+    - '.github/workflows/ci.yml'
+    - '.github/actions/preflight/action.yml'
+    - '.github/actions/make-ci-image/action.yml'
+  schedule:
+    - cron: "23 2 * * 6"
+
+env:
+  registry_base: 'quay.io/km6g-ci-images'
+
+jobs:
+  preflight:
+    runs-on: ubuntu-20.04
+    outputs:
+      need_image: ${{ steps.preflight.outputs.need_image }}
+      image_tag: ${{ steps.preflight.outputs.image_tag }}
+      # workaround to make registry_base available in jobs
+      registry_base: ${{ env.registry_base }}
+    steps:
+    - uses: actions/checkout@v3
+    - id: preflight
+      uses: ./.github/actions/preflight
+  image:
+    runs-on: ubuntu-20.04
+    needs:
+    - preflight
+    steps:
+    - uses: actions/checkout@v3
+    - uses: ./.github/actions/make-ci-image
+      if: needs.preflight.outputs.need_image == 'true'
+      with:
+        image_name: ${{ needs.preflight.outputs.registry_base }}/python:${{ needs.preflight.outputs.image_tag }}
+        quay_username: ${{ secrets.QUAY_BOT_NAME }}
+        quay_password: ${{ secrets.QUAY_BOT_PASSWORD }}
