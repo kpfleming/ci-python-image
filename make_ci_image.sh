@@ -17,9 +17,9 @@ buildcmd() {
 
 buildah config --workingdir /root "${c}"
 
-buildcmd apt update --quiet=2
+buildcmd apt-get update --quiet=2
 
-buildcmd apt install --yes --quiet=2 "${py_deps[@]}"
+buildcmd apt-get install --yes --quiet=2 "${py_deps[@]}"
 
 for pyver in "${pyversions[@]}"; do
     # shellcheck disable=SC2001
@@ -39,9 +39,9 @@ buildcmd mkdir /root/hatch
 buildcmd pip3.10 install tox
 buildcmd mkdir /root/tox
 
-buildcmd apt remove --yes --purge "${py_deps[@]}"
-buildcmd apt autoremove --yes --purge
-buildcmd apt clean autoclean
+buildcmd apt-get remove --yes --purge "${py_deps[@]}"
+buildcmd apt-get autoremove --yes --purge
+buildcmd apt-get clean autoclean
 buildcmd sh -c "rm -rf /var/lib/apt/lists/*"
 buildcmd rm -rf /root/.cache
 
