@@ -15,6 +15,7 @@ runs:
         - 'pybuild.sh'
         - 'make_ci_image.sh'
         - '.github/actions/make-ci-image/action.yml'
+        - '.github/workflows/ci.yml'
     if: github.event_name != 'schedule'
   - id: main
     run: echo "::set-output name=image_tag::main"
