@@ -31,7 +31,7 @@ env:
 
 jobs:
   preflight:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     outputs:
       need_image: ${{ steps.preflight.outputs.need_image }}
       image_tag: ${{ steps.preflight.outputs.image_tag }}
@@ -42,12 +42,12 @@ jobs:
     - id: preflight
       uses: ./.github/actions/preflight
   image:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs:
     - preflight
     strategy:
       matrix:
-        distro: [buster, bullseye]
+        distro: [bullseye]
     steps:
     - uses: actions/checkout@v3
     - uses: ./.github/actions/make-ci-image
