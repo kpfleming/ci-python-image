@@ -7,7 +7,7 @@ distro="${1}"
 
 py_deps=(build-essential libreadline-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev)
 
-pyversions=(3.8.15 3.9.15 3.10.8 3.11.0rc2)
+pyversions=(3.8.15 3.9.15 3.10.8 3.11.0)
 
 c=$(buildah from "debian:${distro}")
 
