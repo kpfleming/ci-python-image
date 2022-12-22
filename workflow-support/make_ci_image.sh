@@ -3,13 +3,14 @@
 set -ex
 
 scriptdir=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
-distro="${1}"
+base_image=${1}; shift
+image_name=${1}; shift
 
 py_deps=(build-essential libreadline-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev)
 
 pyversions=(3.8.16 3.9.16 3.10.9 3.11.1)
 
-c=$(buildah from "debian:${distro}")
+c=$(buildah from "${base_image}")
 
 buildcmd() {
     buildah run --network host "${c}" -- "$@"
@@ -47,7 +48,6 @@ buildcmd apt-get clean autoclean
 buildcmd sh -c "rm -rf /var/lib/apt/lists/*"
 buildcmd rm -rf /root/.cache
 
-# shellcheck disable=SC2154 # image_name set in external environment
 if buildah images --quiet "${image_name}"; then
     buildah rmi "${image_name}"
 fi

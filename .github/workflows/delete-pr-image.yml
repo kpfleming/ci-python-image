@@ -8,11 +8,18 @@ on:
     - main
 
 jobs:
-  clean-hatch:
+  clean-image:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
         distro: [bullseye]
     steps:
-    - name: delete image tag
-      run: 'curl -s -X DELETE -H "Authorization: Bearer ${{ secrets.QUAY_API_TOKEN }}" https://quay.io/api/v1/repository/km6g-ci-images/python/tag/${{ matrix.distro }}-pr${{ github.event.pull_request.number }}'
+    - id: details
+      uses: kpfleming/composite-actions/image-details@main
+    - uses: kpfleming/composite-actions/delete-pr-image@main
+      with:
+        image_registry: ${{ steps.details.outputs.image_registry }}
+        registry_account: ${{ steps.details.outputs.registry_account }}
+        registry_token: ${{ secrets.QUAY_API_TOKEN }}
+        repo_name: python
+        tag_prefix: ${{ matrix.distro }}
