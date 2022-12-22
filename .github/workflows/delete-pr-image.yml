@@ -22,4 +22,4 @@ jobs:
         registry_account: ${{ steps.details.outputs.registry_account }}
         registry_token: ${{ secrets.QUAY_API_TOKEN }}
         repo_name: python
-        tag_prefix: ${{ matrix.distro }}
+        tag_prefix: ${{ matrix.distro }}-
