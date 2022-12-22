@@ -36,10 +36,10 @@ done
 buildcmd sh -c "rm -rf /usr/local/bin/python3.?m*"
 buildcmd sh -c "rm -rf /usr/local/bin/python3.??m*"
 
-buildcmd pip3.10 install hatch
+buildcmd pip3.11 install hatch
 buildcmd mkdir /root/hatch
 
-buildcmd pip3.10 install tox
+buildcmd pip3.11 install tox
 buildcmd mkdir /root/tox
 
 buildcmd apt-get remove --yes --purge "${py_deps[@]}"
