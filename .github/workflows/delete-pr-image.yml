@@ -15,8 +15,8 @@ jobs:
         distro: [bullseye]
     steps:
     - id: details
-      uses: kpfleming/composite-actions/image-details@main
-    - uses: kpfleming/composite-actions/delete-pr-image@main
+      uses: kpfleming/composite-actions/image-details@v1
+    - uses: kpfleming/composite-actions/delete-pr-image@v1
       with:
         image_registry: ${{ steps.details.outputs.image_registry }}
         registry_account: ${{ steps.details.outputs.registry_account }}

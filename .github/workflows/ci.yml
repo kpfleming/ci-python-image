@@ -30,19 +30,19 @@ jobs:
         distro: [bullseye]
     steps:
     - id: details
-      uses: kpfleming/composite-actions/image-details@main
+      uses: kpfleming/composite-actions/image-details@v1
       with:
         base_image_registry: docker.io
         base_image_registry_account: library
         base_image: debian:${{ matrix.distro }}
     - uses: actions/checkout@v3
     - id: preflight
-      uses: kpfleming/composite-actions/ci-preflight@main
+      uses: kpfleming/composite-actions/ci-preflight@v1
       with:
         files_hash: ${{ hashfiles('workflow-support/make_ci_image.sh', 'workflow-support/pybuild.sh') }}
         base_image_hash: ${{ steps.details.outputs.base_image_hash }}
     - id: make-ci-image
-      uses: kpfleming/composite-actions/make-ci-image@main
+      uses: kpfleming/composite-actions/make-ci-image@v1
       if: steps.preflight.outputs.need_image == 'true'
       with:
         base_image: ${{ steps.details.outputs.base_image }}
