@@ -37,14 +37,14 @@ buildcmd sh -c "rm -rf /usr/local/bin/python3.?m*"
 buildcmd sh -c "rm -rf /usr/local/bin/python3.??m*"
 
 buildcmd pip3.11 install hatch
-buildcmd mkdir /root/hatch
-buildah copy "${c}" "${scriptdir}/hatch-config.toml" /root/hatch/config.toml
-buildah config --env HATCH_CONFIG=/root/hatch/config.toml "${c}"
+buildcmd mkdir /hatch
+buildah copy "${c}" "${scriptdir}/hatch-config.toml" /hatch/config.toml
+buildah config --env HATCH_CONFIG=/hatch/config.toml "${c}"
 
 buildcmd pip3.11 install tox
-buildcmd mkdir /root/tox
-buildah copy "${c}" "${scriptdir}/tox-config.ini" /root/tox/config.ini
-buildah config --env TOX_CONFIG_FILE=/root/tox/config.ini "${c}"
+buildcmd mkdir /tox
+buildah copy "${c}" "${scriptdir}/tox-config.ini" /tox/config.ini
+buildah config --env TOX_CONFIG_FILE=/tox/config.ini "${c}"
 
 buildcmd apt-get remove --yes --purge "${py_deps[@]}"
 buildcmd apt-get autoremove --yes --purge
