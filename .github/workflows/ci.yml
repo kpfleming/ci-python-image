@@ -8,6 +8,8 @@ on:
     - 'workflow-support/make_ci_image.sh'
     - 'workflow-support/pybuild.sh'
     - '.github/workflows/ci.yml'
+    - '.github/workflows/tox-config.ini'
+    - '.github/workflows/hatch-config.toml'
   pull_request:
     types:
     - opened
@@ -19,6 +21,8 @@ on:
     - 'workflow-support/make_ci_image.sh'
     - 'workflow-support/pybuild.sh'
     - '.github/workflows/ci.yml'
+    - '.github/workflows/tox-config.ini'
+    - '.github/workflows/hatch-config.toml'
   schedule:
     - cron: "35 4 * * 5"
 
@@ -39,7 +43,7 @@ jobs:
     - id: preflight
       uses: kpfleming/composite-actions/ci-preflight@v1
       with:
-        files_hash: ${{ hashfiles('workflow-support/make_ci_image.sh', 'workflow-support/pybuild.sh') }}
+        files_hash: ${{ hashfiles('workflow-support/make_ci_image.sh', 'workflow-support/pybuild.sh', '.github/workflows/tox-config.ini', '.github/workflows/hatch-config.toml') }}
         base_image_hash: ${{ steps.details.outputs.base_image_hash }}
     - id: make-ci-image
       uses: kpfleming/composite-actions/make-ci-image@v1
