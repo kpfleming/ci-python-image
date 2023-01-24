@@ -43,8 +43,8 @@ buildah config --env HATCH_CONFIG=/hatch/config.toml "${c}"
 
 buildcmd pip3.11 install tox
 buildcmd mkdir /tox
-buildah copy "${c}" "${scriptdir}/tox-config.ini" /tox/config.ini
-buildah config --env TOX_CONFIG_FILE=/tox/config.ini "${c}"
+# buildah copy "${c}" "${scriptdir}/tox-config.ini" /tox/config.ini
+# buildah config --env TOX_CONFIG_FILE=/tox/config.ini "${c}"
 buildah config --env TOX_WORK_DIR=/tox "${c}"
 
 buildcmd apt-get remove --yes --purge "${py_deps[@]}"
