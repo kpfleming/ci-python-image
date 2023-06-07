@@ -8,7 +8,7 @@ image_name=${1}; shift
 
 py_deps=(build-essential libreadline-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev)
 
-pyversions=(3.8.16 3.9.16 3.10.11 3.11.3)
+pyversions=(3.8.17 3.9.17 3.10.12 3.11.4 3.12.0b2)
 
 c=$(buildah from "${base_image}")
 
