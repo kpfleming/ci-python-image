@@ -6,7 +6,10 @@ scriptdir=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
 base_image=${1}; shift
 image_name=${1}; shift
 
-py_deps=(build-essential libreadline-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev)
+# needed to build wheels that use native code
+py_run_deps=(build-essential libc6-dev libffi-dev)
+
+py_build_deps=(libreadline-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libbz2-dev zlib1g-dev)
 
 pyversions=(3.8.17 3.9.17 3.10.12 3.11.4 3.12.0b3)
 
@@ -22,7 +25,7 @@ buildcmd apt-get update --quiet=2
 
 buildcmd apt-get install --yes --quiet=2 git
 
-buildcmd apt-get install --yes --quiet=2 "${py_deps[@]}"
+buildcmd apt-get install --yes --quiet=2 "${py_run_deps[@]}" "${py_build_deps[@]}"
 
 for pyver in "${pyversions[@]}"; do
     # shellcheck disable=SC2001
@@ -46,7 +49,7 @@ buildcmd mkdir /tox
 buildah copy "${c}" "${scriptdir}/tox-config.ini" /tox/config.ini
 buildah config --env TOX_USER_CONFIG_FILE=/tox/config.ini "${c}"
 
-buildcmd apt-get remove --yes --purge "${py_deps[@]}"
+buildcmd apt-get remove --yes --purge "${py_build_deps[@]}"
 buildcmd apt-get autoremove --yes --purge
 buildcmd apt-get clean autoclean
 buildcmd sh -c "rm -rf /var/lib/apt/lists/*"
