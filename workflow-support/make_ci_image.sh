@@ -39,7 +39,7 @@ done
 buildcmd sh -c "rm -rf /usr/local/bin/python3.?m*"
 buildcmd sh -c "rm -rf /usr/local/bin/python3.??m*"
 
-buildcmd pip3.11 install hatch
+buildcmd pip3.11 install hatch hatch-fancy-pypi-readme
 buildcmd mkdir /hatch
 buildah copy "${c}" "${scriptdir}/hatch-config.toml" /hatch/config.toml
 buildah config --env HATCH_CONFIG=/hatch/config.toml "${c}"
