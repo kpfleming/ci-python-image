@@ -11,7 +11,7 @@ py_run_deps=(build-essential libc6-dev libffi-dev)
 
 py_build_deps=(libreadline-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libbz2-dev zlib1g-dev)
 
-pyversions=(3.8.18 3.9.18 3.10.13 3.11.5 3.12.0rc3)
+pyversions=(3.8.18 3.9.18 3.10.13 3.11.5 3.12.0)
 
 c=$(buildah from "${base_image}")
 
