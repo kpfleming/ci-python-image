@@ -39,12 +39,12 @@ done
 buildcmd sh -c "rm -rf /usr/local/bin/python3.?m*"
 buildcmd sh -c "rm -rf /usr/local/bin/python3.??m*"
 
-buildcmd pip3.11 install hatch hatch-fancy-pypi-readme
+buildcmd pip3.12 install hatch hatch-fancy-pypi-readme
 buildcmd mkdir /hatch
 buildah copy "${c}" "${scriptdir}/hatch-config.toml" /hatch/config.toml
 buildah config --env HATCH_CONFIG=/hatch/config.toml "${c}"
 
-buildcmd pip3.11 install tox
+buildcmd pip3.12 install tox
 buildcmd mkdir /tox
 buildah copy "${c}" "${scriptdir}/tox-config.ini" /tox/config.ini
 buildah config --env TOX_USER_CONFIG_FILE=/tox/config.ini "${c}"
