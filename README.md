@@ -5,8 +5,9 @@
 [![License - Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-9400d3.svg)](https://spdx.org/licenses/Apache-2.0.html)
 
 This repo contains scripts and Actions workflows to build and maintain
-a container image with various versions of Python (built from source),
-along with useful tools. The image is intended for use in CI workflows.
+a container image with various versions of Python (from
+python-build-standalone), along with Hatch and various Hatch
+plugins. The image is intended for use in CI workflows.
 
 Open Source software: [Apache License 2.0](https://spdx.org/licenses/Apache-2.0.html)
 

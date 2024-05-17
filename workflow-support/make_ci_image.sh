@@ -6,12 +6,7 @@ scriptdir=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
 base_image=${1}; shift
 image_name=${1}; shift
 
-# needed to build wheels that use native code
-py_run_deps=(build-essential libc6-dev libffi-dev)
-
-py_build_deps=(libreadline-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libbz2-dev zlib1g-dev)
-
-pyversions=(3.8.19 3.9.19 3.10.14 3.11.9 3.12.3 3.13.0b1)
+pyversions=(3.8 3.9 3.10 3.11 3.12)
 
 c=$(buildah from "${base_image}")
 
@@ -23,37 +18,41 @@ buildah config --workingdir /root "${c}"
 
 buildcmd apt-get update --quiet=2
 
-buildcmd apt-get install --yes --quiet=2 git
+buildcmd apt-get install --yes --quiet=2 git python3
 
-buildcmd apt-get install --yes --quiet=2 "${py_run_deps[@]}" "${py_build_deps[@]}"
+uv_version=$(curl -sL https://api.github.com/repos/astral-sh/uv/releases/latest | jq -r ".tag_name")
 
-for pyver in "${pyversions[@]}"; do
-    # shellcheck disable=SC2001
-    # strip off any beta or rc suffix to get version directory
-    verdir=$(echo "${pyver}" | sed -e 's/^\([[:digit:]]*\.[[:digit:]]*\.[[:digit:]]*\).*$/\1/')
-    wget --quiet --output-document - "https://www.python.org/ftp/python/${verdir}/Python-${pyver}.tgz" | tar --extract --gzip
-    buildah run --network host --volume "${scriptdir}:/scriptdir" --volume "$(pwd)/Python-${pyver}:/${pyver}" "${c}" -- /scriptdir/pybuild.sh "/${pyver}"
-    rm -rf "Python-${pyver}"
-done
+curl -sL https://github.com/astral-sh/uv/releases/download/"${uv_version}"/uv-x86_64-unknown-linux-gnu.tar.gz | tar --extract --gzip --strip-components=1
+buildah copy "${c}" uv /usr/bin/uv
+buildah copy "${c}" "${scriptdir}/uv-config.toml" /uv.toml
+buildah config --env UV_CONFIG_FILE=/uv.toml "${c}"
 
-buildcmd sh -c "rm -rf /usr/local/bin/python3.?m*"
-buildcmd sh -c "rm -rf /usr/local/bin/python3.??m*"
+buildcmd uv venv --python python3.11 --no-cache /hatch
 
-buildcmd pip3.12 install hatch hatchling hatch-vcs hatch-fancy-pypi-readme
-buildcmd mkdir /hatch
+buildcmd uv pip install --python /hatch/bin/python3.11 --no-cache hatch hatchling hatch-vcs hatch-fancy-pypi-readme
+
 buildah copy "${c}" "${scriptdir}/hatch-config.toml" /hatch/config.toml
 buildah config --env HATCH_CONFIG=/hatch/config.toml "${c}"
+buildah config --env HATCH_ENV_TYPE_VIRTUAL_UV_PATH=/usr/bin/uv "${c}"
 
-buildcmd pip3.12 install tox
-buildcmd mkdir /tox
-buildah copy "${c}" "${scriptdir}/tox-config.ini" /tox/config.ini
-buildah config --env TOX_USER_CONFIG_FILE=/tox/config.ini "${c}"
+# Hatch will add the installed Python distributions as PATH
+# entries in .profile, but that's not necessary since the PATH
+# variable for the entire image will include them
+buildcmd cp /root/.profile /root/.profile.save
+buildcmd /hatch/bin/hatch python install "${pyversions[@]}"
+buildcmd cp /root/.profile.save /root/.profile
 
-buildcmd apt-get remove --yes --purge "${py_build_deps[@]}"
-buildcmd apt-get autoremove --yes --purge
+new_path=/usr/sbin:/usr/bin:/sbin:/bin:/hatch/bin
+
+for pyversion in "${pyversions[@]}"
+do
+    new_path="${new_path}:/hatch/python/${pyversion}/python/bin"
+done
+
+buildah config --env PATH="${new_path}" "${c}"
+
 buildcmd apt-get clean autoclean
 buildcmd sh -c "rm -rf /var/lib/apt/lists/*"
-buildcmd rm -rf /root/.cache
 
 if buildah images --quiet "${image_name}"; then
     buildah rmi "${image_name}"

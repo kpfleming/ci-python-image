@@ -32,14 +32,14 @@ jobs:
       uses: kpfleming/composite-actions/ci-preflight@v2
       with:
         ci_paths: workflow-support/ci_paths.yml
-        files_hash: ${{ hashfiles('workflow-support/make_ci_image.sh', 'workflow-support/pybuild.sh', '.github/workflows/tox-config.ini', '.github/workflows/hatch-config.toml') }}
+        files_hash: ${{ hashfiles('workflow-support/make_ci_image.sh', '.github/workflows/hatch-config.toml') }}
         base_image_hash: ${{ steps.details.outputs.base_image_hash }}
     - id: make-ci-image
       uses: kpfleming/composite-actions/make-ci-image@v2
       if: steps.preflight.outputs.need_image == 'true'
       with:
         base_image: ${{ steps.details.outputs.base_image }}
-        image_name: ${{ steps.details.outputs.image_registry }}/${{ steps.details.outputs.registry_account }}/python:${{ matrix.distro }}-${{ steps.preflight.outputs.image_tag }}
+        image_name: ${{ steps.details.outputs.image_registry }}/${{ steps.details.outputs.registry_account }}/python:v3-${{ matrix.distro }}-${{ steps.preflight.outputs.image_tag }}
         image_cache_key: ${{ steps.preflight.outputs.image_cache_key }}
         image_registry: ${{ steps.details.outputs.image_registry }}
         registry_username: ${{ secrets.QUAY_BOT_NAME }}

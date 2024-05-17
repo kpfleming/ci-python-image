@@ -1,6 +1,4 @@
 paths:
   - 'workflow-support/make_ci_image.sh'
-  - 'workflow-support/pybuild.sh'
   - '.github/workflows/ci.yml'
-  - '.github/workflows/tox-config.ini'
   - '.github/workflows/hatch-config.toml'
