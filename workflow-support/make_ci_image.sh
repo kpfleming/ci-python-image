@@ -6,7 +6,7 @@ scriptdir=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
 base_image=${1}; shift
 image_name=${1}; shift
 
-pyversions=(3.8 3.9 3.10 3.11 3.12)
+pyversions=(3.9 3.10 3.11 3.12 3.13)
 
 c=$(buildah from "${base_image}")
 
@@ -27,9 +27,9 @@ buildah copy "${c}" uv /usr/bin/uv
 buildah copy "${c}" "${scriptdir}/uv-config.toml" /uv.toml
 buildah config --env UV_CONFIG_FILE=/uv.toml "${c}"
 
-buildcmd uv venv --python python3.11 --no-cache /hatch
+buildcmd uv venv --python python3.12 --no-cache /hatch
 
-buildcmd uv pip install --python /hatch/bin/python3.11 --no-cache hatch hatchling hatch-vcs hatch-fancy-pypi-readme
+buildcmd uv pip install --python /hatch/bin/python3.12 --no-cache hatch hatchling hatch-vcs hatch-fancy-pypi-readme
 
 buildah copy "${c}" "${scriptdir}/hatch-config.toml" /hatch/config.toml
 buildah config --env HATCH_CONFIG=/hatch/config.toml "${c}"
