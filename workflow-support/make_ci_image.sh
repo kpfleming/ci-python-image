@@ -27,7 +27,7 @@ buildah copy "${c}" uv /usr/bin/uv
 buildah copy "${c}" "${scriptdir}/uv-config.toml" /uv.toml
 buildah config --env UV_CONFIG_FILE=/uv.toml "${c}"
 
-buildcmd uv python install "${pyversions[@]}"
+buildcmd uv python install "${pyversions[@]}" --preview
 
 buildcmd uv venv --python python3.13 --no-cache /hatch
 
@@ -37,7 +37,7 @@ buildah copy "${c}" "${scriptdir}/hatch-config.toml" /hatch/config.toml
 buildah config --env HATCH_CONFIG=/hatch/config.toml "${c}"
 buildah config --env HATCH_ENV_TYPE_VIRTUAL_UV_PATH=/usr/bin/uv "${c}"
 
-new_path=/usr/sbin:/usr/bin:/sbin:/bin:/hatch/bin
+new_path=/usr/sbin:/usr/bin:/sbin:/bin:/hatch/bin:/root/.local/bin
 
 buildah config --env PATH="${new_path}" "${c}"
 
