@@ -1,7 +1,6 @@
 [dirs]
 data = "/hatch/data"
 cache = "/hatch/cache"
-python = "/hatch/python"
 
 [dirs.env]
 virtual = "/hatch/virtual"
