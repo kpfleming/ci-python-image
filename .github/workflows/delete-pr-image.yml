@@ -15,11 +15,11 @@ jobs:
         distro: [bookworm]
     steps:
     - id: details
-      uses: kpfleming/composite-actions/image-details@v2
-    - uses: kpfleming/composite-actions/delete-pr-image@v2
+      uses: kpfleming/composite-actions/image-details@v3
+    - uses: kpfleming/composite-actions/delete-pr-image@v3
       with:
         image_registry: ${{ steps.details.outputs.image_registry }}
         registry_account: ${{ steps.details.outputs.registry_account }}
-        registry_token: ${{ secrets.QUAY_API_TOKEN }}
+        registry_token: ${{ secrets.FORGE_API_TOKEN }}
         repo_name: python
         tag_prefix: v4-${{ matrix.distro }}-

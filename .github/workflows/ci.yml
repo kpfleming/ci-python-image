@@ -13,6 +13,7 @@ on:
     - main
   schedule:
     - cron: "35 4 * * 5"
+  workflow_dispatch:
 
 jobs:
   ci-image:
@@ -22,25 +23,25 @@ jobs:
         distro: [bookworm]
     steps:
     - id: details
-      uses: kpfleming/composite-actions/image-details@v2
+      uses: kpfleming/composite-actions/image-details@v3
       with:
         base_image_registry: docker.io
         base_image_registry_account: library
         base_image: debian:${{ matrix.distro }}
     - uses: actions/checkout@v4
     - id: preflight
-      uses: kpfleming/composite-actions/ci-preflight@v2
+      uses: kpfleming/composite-actions/ci-preflight@v3
       with:
         ci_paths: workflow-support/ci_paths.yml
         files_hash: ${{ hashfiles('workflow-support/make_ci_image.sh', '.github/workflows/hatch-config.toml', '.github/workflows/ci.yml') }}
         base_image_hash: ${{ steps.details.outputs.base_image_hash }}
     - id: make-ci-image
-      uses: kpfleming/composite-actions/make-ci-image@v2
+      uses: kpfleming/composite-actions/make-ci-image@v3
       if: steps.preflight.outputs.need_image == 'true'
       with:
         base_image: ${{ steps.details.outputs.base_image }}
         image_name: ${{ steps.details.outputs.image_registry }}/${{ steps.details.outputs.registry_account }}/python:v4-${{ matrix.distro }}-${{ steps.preflight.outputs.image_tag }}
         image_cache_key: ${{ steps.preflight.outputs.image_cache_key }}
         image_registry: ${{ steps.details.outputs.image_registry }}
-        registry_username: ${{ secrets.QUAY_BOT_NAME }}
-        registry_password: ${{ secrets.QUAY_BOT_PASSWORD }}
+        registry_username: ${{ vars.FORGE_BOT_NAME }}
+        registry_password: ${{ secrets.FORGE_API_TOKEN }}
