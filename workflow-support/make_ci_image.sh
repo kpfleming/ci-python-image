@@ -22,7 +22,7 @@ buildcmd apt-get install --yes --quiet=2 git python3
 
 uv_version=$(curl -sL https://api.github.com/repos/astral-sh/uv/releases/latest | jq -r ".tag_name")
 
-curl -sL https://github.com/astral-sh/uv/releases/download/"${uv_version}"/uv-x86_64-unknown-linux-gnu.tar.gz | tar --extract --gzip --strip-components=1
+curl -sL https://github.com/astral-sh/uv/releases/download/"${uv_version}"/uv-aarch64-unknown-linux-gnu.tar.gz | tar --extract --gzip --strip-components=1
 buildah copy "${c}" uv /usr/bin/uv
 buildah copy "${c}" "${scriptdir}/uv-config.toml" /uv.toml
 buildah config --env UV_CONFIG_FILE=/uv.toml "${c}"
