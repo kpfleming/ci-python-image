@@ -6,7 +6,7 @@ scriptdir=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
 base_image=${1}; shift
 image_name=${1}; shift
 
-pyversions=(3.9 3.10 3.11 3.12 3.13 3.14)
+pyversions=(3.10 3.11 3.12 3.13 3.14)
 
 c=$(buildah from "${base_image}")
 
