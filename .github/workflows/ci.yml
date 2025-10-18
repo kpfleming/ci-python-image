@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-24.04-arm
     strategy:
       matrix:
-        distro: [bookworm]
+        distro: [trixie]
     steps:
     - id: details
       uses: kpfleming/composite-actions/image-details@v3
