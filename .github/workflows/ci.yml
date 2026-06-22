@@ -28,7 +28,7 @@ jobs:
         base_image_registry: docker.io
         base_image_registry_account: library
         base_image: debian:${{ matrix.distro }}
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - id: preflight
       uses: kpfleming/composite-actions/ci-preflight@v3
       with:
