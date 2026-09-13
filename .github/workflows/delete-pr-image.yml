@@ -7,6 +7,13 @@ on:
     branches:
     - main
 
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
   clean-image:
     runs-on: ubuntu-24.04-arm
@@ -14,12 +21,13 @@ jobs:
       matrix:
         distro: [trixie]
     steps:
-    - id: details
-      uses: kpfleming/composite-actions/image-details@v3
-    - uses: kpfleming/composite-actions/delete-pr-image@v3
-      with:
-        image_registry: ${{ steps.details.outputs.image_registry }}
-        registry_account: ${{ steps.details.outputs.registry_account }}
-        registry_token: ${{ secrets.FORGE_API_TOKEN }}
-        repo_name: python
-        tag_prefix: v4-${{ matrix.distro }}-
+      - id: details
+        uses: kpfleming/composite-actions/image-details@74c01bb4d399a98545e8cdc5826d832b7917ac6b # v3.1.0
+
+      - uses: kpfleming/composite-actions/delete-pr-image@74c01bb4d399a98545e8cdc5826d832b7917ac6b # v3.1.0
+        with:
+          image_registry: ${{ steps.details.outputs.image_registry }}
+          registry_account: ${{ steps.details.outputs.registry_account }}
+          registry_token: ${{ secrets.FORGE_API_TOKEN }}
+          repo_name: python
+          tag_prefix: v4-${{ matrix.distro }}-
