@@ -52,7 +52,7 @@ jobs:
         if: steps.preflight.outputs.need_image == 'true' || github.event_name == 'workflow_dispatch'
         with:
           base_image: ${{ steps.details.outputs.base_image }}
-          image_name: ${{ steps.details.outputs.image_registry }}/${{ steps.details.outputs.registry_account }}/python:v4-${{ matrix.distro }}-${{ steps.preflight.outputs.image_tag }}
+          image_name: ${{ steps.details.outputs.image_registry }}/${{ steps.details.outputs.registry_account }}/python:v5-${{ matrix.distro }}-${{ steps.preflight.outputs.image_tag }}
           image_cache_key: ${{ steps.preflight.outputs.image_cache_key }}
           image_registry: ${{ steps.details.outputs.image_registry }}
           registry_username: ${{ vars.FORGE_BOT_NAME }}
