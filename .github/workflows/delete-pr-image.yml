@@ -30,4 +30,4 @@ jobs:
           registry_account: ${{ steps.details.outputs.registry_account }}
           registry_token: ${{ secrets.FORGE_API_TOKEN }}
           repo_name: python
-          tag_prefix: v4-${{ matrix.distro }}-
+          tag_prefix: v5-${{ matrix.distro }}-
